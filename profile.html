@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мой профиль — STARProject</title>
+    <title>О себе — STARProject</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -15,7 +15,9 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #001529; color: white; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .profile-gradient { background: linear-gradient(180deg, #002147 0%, #001529 100%); }
+        .input-style { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.75rem; padding: 0.75rem 1rem; outline: none; transition: all 0.2s; width: 100%; }
+        .input-style:focus { border-color: #FF8C00; background: rgba(255, 255, 255, 0.08); }
+        .tag-checkbox:checked + label { background-color: #FF8C00; border-color: #FF8C00; color: white; }
     </style>
 </head>
 <body class="min-h-screen bg-oilBlue">
@@ -25,73 +27,94 @@
         <div class="text-xl font-800 mb-12">STAR<span class="text-energyOrange">.</span></div>
         <nav class="space-y-4 flex-1">
             <a href="index.html" class="flex items-center gap-4 hover:bg-white/5 p-3 rounded-xl transition text-gray-400 hover:text-white"><i class="fa-solid fa-house"></i> <span class="hidden md:inline">Главная</span></a>
+            <a href="dashboard.html" class="flex items-center gap-4 hover:bg-white/5 p-3 rounded-xl transition text-gray-400 hover:text-white"><i class="fa-solid fa-users"></i> <span class="hidden md:inline">Мэтчи</span></a>
             <a href="chat.html" class="flex items-center gap-4 hover:bg-white/5 p-3 rounded-xl transition text-gray-400 hover:text-white"><i class="fa-solid fa-message"></i> <span class="hidden md:inline">Сообщения</span></a>
-            <a href="#" class="flex items-center gap-4 bg-energyOrange p-3 rounded-xl text-white"><i class="fa-solid fa-user"></i> <span class="hidden md:inline">Профиль</span></a>
+            <a href="#" class="flex items-center gap-4 bg-energyOrange p-3 rounded-xl text-white"><i class="fa-solid fa-user-pen"></i> <span class="hidden md:inline">О себе</span></a>
         </nav>
         <div class="pt-6 border-t border-white/10">
-            <a href="index.html" class="flex items-center gap-4 text-gray-500 hover:text-white transition"><i class="fa-solid fa-right-from-bracket"></i> <span class="hidden md:inline">Выход</span></a>
+            <a href="index.html" onclick="localStorage.clear()" class="flex items-center gap-4 text-gray-500 hover:text-white transition"><i class="fa-solid fa-right-from-bracket"></i> <span class="hidden md:inline">Выход</span></a>
         </div>
     </aside>
 
     <!-- Main Content -->
     <main class="ml-20 md:ml-64 p-6 md:p-12">
-        <div class="max-w-4xl mx-auto">
-            <!-- Header & Badge -->
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
-                <div class="flex items-center gap-6">
-                    <div class="w-24 h-24 rounded-3xl bg-energyOrange flex items-center justify-center text-4xl font-800 shadow-xl shadow-energyOrange/20">
-                        АВ
+        <div class="max-w-3xl mx-auto">
+            <h1 class="text-3xl font-800 mb-8">Редактировать <span class="text-energyOrange">профиль</span></h1>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Avatar Upload -->
+                <div class="md:col-span-1 space-y-4">
+                    <p class="text-[10px] uppercase font-bold text-gray-500 ml-1">Аватарка</p>
+                    <div class="relative group cursor-pointer">
+                        <div id="avatarPreview" class="aspect-square rounded-3xl bg-energyOrange flex items-center justify-center text-4xl font-800 shadow-xl overflow-hidden border-4 border-white/5">
+                            ?
+                        </div>
+                        <label for="avatarInput" class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition rounded-3xl">
+                            <i class="fa-solid fa-camera text-2xl"></i>
+                        </label>
+                        <input type="file" id="avatarInput" accept="image/*" class="hidden">
                     </div>
-                    <div>
-                        <h1 class="text-3xl font-800">Артём Воробьёв</h1>
-                        <div class="flex items-center gap-2 text-energyOrange mt-1">
-                            <i class="fa-solid fa-circle-check"></i>
-                            <span class="text-[10px] uppercase font-bold tracking-widest">Верифицировано УГНТУ</span>
+                    <p class="text-[10px] text-gray-500 text-center">Нажмите, чтобы загрузить фото из галереи</p>
+                </div>
+
+                <!-- Form Fields -->
+                <div class="md:col-span-2 space-y-6">
+                    <div class="space-y-2">
+                        <label class="text-[10px] uppercase font-bold text-gray-500 ml-1">ФИО</label>
+                        <input type="text" id="editFio" class="input-style" placeholder="Иван Иванов">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="text-[10px] uppercase font-bold text-gray-500 ml-1">Факультет</label>
+                            <input type="text" id="editFaculty" class="input-style" placeholder="ФТТ">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] uppercase font-bold text-gray-500 ml-1">Курс (1-4)</label>
+                            <select id="editCourse" class="input-style bg-oilBlue">
+                                <option value="1">1 курс</option>
+                                <option value="2">2 курс</option>
+                                <option value="3">3 курс</option>
+                                <option value="4">4 курс</option>
+                            </select>
                         </div>
                     </div>
-                </div>
-                <button class="border border-energyOrange/50 text-energyOrange px-6 py-2 rounded-xl text-sm font-bold hover:bg-energyOrange hover:text-white transition">Редактировать анкету</button>
-            </div>
 
-            <!-- Stats Grid -->
-            <div class="grid md:grid-cols-3 gap-6 mb-12">
-                <div class="glass p-6 rounded-2xl border-l-4 border-l-blue-500">
-                    <p class="text-[10px] uppercase font-bold text-gray-500 mb-2">Статус</p>
-                    <p class="font-bold">Студент УГНТУ</p>
-                    <p class="text-xs text-gray-400">3 курс, Очное</p>
-                </div>
-                <div class="glass p-6 rounded-2xl border-l-4 border-l-green-500">
-                    <p class="text-[10px] uppercase font-bold text-gray-500 mb-2">Бюджет</p>
-                    <p class="font-bold">12 000 — 15 000 ₽</p>
-                    <p class="text-xs text-gray-400">В месяц за комнату</p>
-                </div>
-                <div class="glass p-6 rounded-2xl border-l-4 border-l-energyOrange">
-                    <p class="text-[10px] uppercase font-bold text-gray-500 mb-2">Статус поиска</p>
-                    <p class="font-bold text-energyOrange">Активно ищу</p>
-                    <p class="text-xs text-gray-400">С 15 апреля 2026</p>
-                </div>
-            </div>
-
-            <!-- Profile Details -->
-            <div class="max-w-2xl space-y-8">
-                <div>
-                    <h3 class="text-xl font-bold mb-4 flex items-center gap-3">
-                        <i class="fa-solid fa-list-check text-energyOrange"></i> Мои привычки
-                    </h3>
-                    <div class="flex flex-wrap gap-3">
-                        <span class="glass px-4 py-2 rounded-xl text-xs flex items-center gap-2"><i class="fa-solid fa-ban text-red-500"></i> Не курю</span>
-                        <span class="glass px-4 py-2 rounded-xl text-xs flex items-center gap-2"><i class="fa-solid fa-sun text-yellow-500"></i> Жаворонок</span>
-                        <span class="glass px-4 py-2 rounded-xl text-xs flex items-center gap-2"><i class="fa-solid fa-book text-blue-500"></i> Люблю тишину</span>
-                        <span class="glass px-4 py-2 rounded-xl text-xs flex items-center gap-2"><i class="fa-solid fa-broom text-green-500"></i> Соблюдаю чистоту</span>
+                    <!-- Tags / Habits -->
+                    <div class="space-y-4">
+                        <label class="text-[10px] uppercase font-bold text-gray-500 ml-1">Мои увлечения и привычки</label>
+                        <div class="flex flex-wrap gap-2">
+                            <div>
+                                <input type="checkbox" id="tag_no_smoke" class="hidden tag-checkbox">
+                                <label for="tag_no_smoke" class="glass px-3 py-2 rounded-xl text-xs cursor-pointer border border-white/5 transition flex items-center gap-2">
+                                    <i class="fa-solid fa-ban text-red-500"></i> Не курю
+                                </label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="tag_animals" class="hidden tag-checkbox">
+                                <label for="tag_animals" class="glass px-3 py-2 rounded-xl text-xs cursor-pointer border border-white/5 transition flex items-center gap-2">
+                                    <i class="fa-solid fa-paw text-orange-500"></i> Животные
+                                </label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="tag_quiet" class="hidden tag-checkbox">
+                                <label for="tag_quiet" class="glass px-3 py-2 rounded-xl text-xs cursor-pointer border border-white/5 transition flex items-center gap-2">
+                                    <i class="fa-solid fa-volume-mute text-blue-500"></i> Тишина
+                                </label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="tag_clean" class="hidden tag-checkbox">
+                                <label for="tag_clean" class="glass px-3 py-2 rounded-xl text-xs cursor-pointer border border-white/5 transition flex items-center gap-2">
+                                    <i class="fa-solid fa-broom text-green-500"></i> Чистота
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold mb-4 flex items-center gap-3">
-                        <i class="fa-solid fa-heart text-energyOrange"></i> Интересы
-                    </h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        Увлекаюсь спортивным программированием и баскетболом. Ищу соседа, который ценит личное пространство, но не против иногда заказать пиццу и обсудить пары или проекты.
-                    </p>
+
+                    <button onclick="saveProfile()" class="w-full bg-energyOrange py-4 rounded-2xl font-bold shadow-lg shadow-energyOrange/20 hover:scale-[1.02] transition mt-4">
+                        Сохранить изменения
+                    </button>
+                    <div id="saveToast" class="hidden text-center text-green-500 font-bold text-sm animate-bounce">Изменения сохранены!</div>
                 </div>
             </div>
         </div>
@@ -99,34 +122,68 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const fio = localStorage.getItem('star_user_fio') || 'Студент';
-            const uni = localStorage.getItem('star_user_uni') || 'УГНТУ';
-            const course = localStorage.getItem('star_user_course') || '...';
+            // Загрузка данных
+            document.getElementById('editFio').value = localStorage.getItem('star_user_fio') || '';
+            document.getElementById('editFaculty').value = localStorage.getItem('star_user_faculty') || '';
+            document.getElementById('editCourse').value = localStorage.getItem('star_user_course') || '1';
             
-            document.getElementById('userFullName').textContent = fio;
-            document.getElementById('userUni').textContent = uni;
-            document.getElementById('userUniLabel').textContent = uni;
-            document.getElementById('userCourseLabel').textContent = course + ' курс, Очное';
-            
-            const initials = fio.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-            document.getElementById('userInitialBig').textContent = initials || '?';
-        });
-    </script>
-</body>
-</html>                          <div class="text-[10px] bg-white/10 px-3 py-1 rounded-full font-bold">Студент УГНТУ</div>
-                            </div>
-                            <h4 class="text-2xl font-bold mb-2">Артём, 21 год</h4>
-                            <p class="text-xs text-gray-500 mb-6">Ищу соседа в Черниковке или около ВДНХ. Бюджет до 15к.</p>
-                            <div class="flex gap-2">
-                                <div class="flex-1 bg-white/5 py-3 rounded-xl text-center text-xs font-bold group-hover:bg-energyOrange transition">Посмотреть анкету</div>
-                                <div class="w-12 bg-white/5 py-3 rounded-xl text-center group-hover:bg-white/10 transition"><i class="fa-solid fa-message"></i></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+            const savedAvatar = localStorage.getItem('star_user_avatar');
+            if (savedAvatar) {
+                const preview = document.getElementById('avatarPreview');
+                preview.innerHTML = `<img src="${savedAvatar}" class="w-full h-full object-cover">`;
+            } else {
+                updateInitial();
+            }
 
+            // Загрузка тегов
+            const tags = JSON.parse(localStorage.getItem('star_user_tags') || '[]');
+            tags.forEach(tagId => {
+                const el = document.getElementById(tagId);
+                if (el) el.checked = true;
+            });
+        });
+
+        function updateInitial() {
+            const fio = document.getElementById('editFio').value;
+            if (!localStorage.getItem('star_user_avatar')) {
+                const initial = fio ? fio[0].toUpperCase() : '?';
+                document.getElementById('avatarPreview').textContent = initial;
+            }
+        }
+
+        // Обработка загрузки фото
+        document.getElementById('avatarInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const base64 = event.target.result;
+                    localStorage.setItem('star_user_avatar', base64);
+                    document.getElementById('avatarPreview').innerHTML = `<img src="${base64}" class="w-full h-full object-cover">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function saveProfile() {
+            const fio = document.getElementById('editFio').value;
+            const faculty = document.getElementById('editFaculty').value;
+            const course = document.getElementById('editCourse').value;
+
+            localStorage.setItem('star_user_fio', fio);
+            localStorage.setItem('star_user_faculty', faculty);
+            localStorage.setItem('star_user_course', course);
+
+            const tags = [];
+            document.querySelectorAll('.tag-checkbox').forEach(cb => {
+                if (cb.checked) tags.push(cb.id);
+            });
+            localStorage.setItem('star_user_tags', JSON.stringify(tags));
+
+            const toast = document.getElementById('saveToast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 2000);
+        }
+    </script>
 </body>
 </html>
