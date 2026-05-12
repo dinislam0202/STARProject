@@ -15,7 +15,7 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #001529; color: white; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .input-style { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.75rem; padding: 0.75rem 1rem; outline: none; transition: all 0.2s; width: 100%; }
+        .input-style { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.75rem; padding: 0.75rem 1rem; outline: none; transition: all 0.2s; width: 100%; color: white; }
         .input-style:focus { border-color: #FF8C00; background: rgba(255, 255, 255, 0.08); }
         .tag-checkbox:checked + label { background-color: #FF8C00; border-color: #FF8C00; color: white; }
     </style>
@@ -36,34 +36,30 @@
         </div>
     </aside>
 
-    <!-- Main Content -->
     <main class="ml-20 md:ml-64 p-6 md:p-12">
         <div class="max-w-3xl mx-auto">
             <h1 class="text-3xl font-800 mb-8">Редактировать <span class="text-energyOrange">профиль</span></h1>
             
             <div class="grid md:grid-cols-3 gap-8">
-                <!-- Avatar Upload -->
-                <div class="md:col-span-1 space-y-4">
-                    <p class="text-[10px] uppercase font-bold text-gray-500 ml-1">Аватарка</p>
-                    <div class="relative group cursor-pointer">
+                <div class="md:col-span-1 space-y-4 text-center">
+                    <p class="text-[10px] uppercase font-bold text-gray-500 text-left ml-1">Аватарка</p>
+                    <div class="relative group cursor-pointer inline-block w-full">
                         <div id="avatarPreview" class="aspect-square rounded-3xl bg-energyOrange flex items-center justify-center text-4xl font-800 shadow-xl overflow-hidden border-4 border-white/5">
                             ?
                         </div>
-                        <label for="avatarInput" class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition rounded-3xl">
-                            <i class="fa-solid fa-camera text-2xl"></i>
+                        <label for="avatarInput" class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition rounded-3xl cursor-pointer">
+                            <i class="fa-solid fa-camera text-2xl text-white"></i>
                         </label>
                         <input type="file" id="avatarInput" accept="image/*" class="hidden">
                     </div>
-                    <p class="text-[10px] text-gray-500 text-center">Нажмите, чтобы загрузить фото из галереи</p>
+                    <p class="text-[10px] text-gray-500">Нажми, чтобы изменить фото</p>
                 </div>
 
-                <!-- Form Fields -->
                 <div class="md:col-span-2 space-y-6">
                     <div class="space-y-2">
                         <label class="text-[10px] uppercase font-bold text-gray-500 ml-1">ФИО</label>
                         <input type="text" id="editFio" class="input-style" placeholder="Иван Иванов">
                     </div>
-                    
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-2">
                             <label class="text-[10px] uppercase font-bold text-gray-500 ml-1">Факультет</label>
@@ -71,7 +67,7 @@
                         </div>
                         <div class="space-y-2">
                             <label class="text-[10px] uppercase font-bold text-gray-500 ml-1">Курс (1-4)</label>
-                            <select id="editCourse" class="input-style bg-oilBlue">
+                            <select id="editCourse" class="input-style bg-[#001529]">
                                 <option value="1">1 курс</option>
                                 <option value="2">2 курс</option>
                                 <option value="3">3 курс</option>
@@ -80,9 +76,8 @@
                         </div>
                     </div>
 
-                    <!-- Tags / Habits -->
                     <div class="space-y-4">
-                        <label class="text-[10px] uppercase font-bold text-gray-500 ml-1">Мои увлечения и привычки</label>
+                        <label class="text-[10px] uppercase font-bold text-gray-500 ml-1">Привычки и интересы</label>
                         <div class="flex flex-wrap gap-2">
                             <div>
                                 <input type="checkbox" id="tag_no_smoke" class="hidden tag-checkbox">
@@ -114,7 +109,7 @@
                     <button onclick="saveProfile()" class="w-full bg-energyOrange py-4 rounded-2xl font-bold shadow-lg shadow-energyOrange/20 hover:scale-[1.02] transition mt-4">
                         Сохранить изменения
                     </button>
-                    <div id="saveToast" class="hidden text-center text-green-500 font-bold text-sm animate-bounce">Изменения сохранены!</div>
+                    <div id="saveToast" class="hidden text-center text-green-400 font-bold text-sm mt-4">✓ Изменения сохранены!</div>
                 </div>
             </div>
         </div>
@@ -122,62 +117,45 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Загрузка данных
             document.getElementById('editFio').value = localStorage.getItem('star_user_fio') || '';
             document.getElementById('editFaculty').value = localStorage.getItem('star_user_faculty') || '';
             document.getElementById('editCourse').value = localStorage.getItem('star_user_course') || '1';
             
             const savedAvatar = localStorage.getItem('star_user_avatar');
             if (savedAvatar) {
-                const preview = document.getElementById('avatarPreview');
-                preview.innerHTML = `<img src="${savedAvatar}" class="w-full h-full object-cover">`;
+                document.getElementById('avatarPreview').innerHTML = `<img src="${savedAvatar}" class="w-full h-full object-cover">`;
             } else {
                 updateInitial();
             }
 
-            // Загрузка тегов
             const tags = JSON.parse(localStorage.getItem('star_user_tags') || '[]');
-            tags.forEach(tagId => {
-                const el = document.getElementById(tagId);
-                if (el) el.checked = true;
-            });
+            tags.forEach(id => { if(document.getElementById(id)) document.getElementById(id).checked = true; });
         });
 
         function updateInitial() {
             const fio = document.getElementById('editFio').value;
-            if (!localStorage.getItem('star_user_avatar')) {
-                const initial = fio ? fio[0].toUpperCase() : '?';
-                document.getElementById('avatarPreview').textContent = initial;
-            }
+            document.getElementById('avatarPreview').textContent = fio ? fio[0].toUpperCase() : '?';
         }
 
-        // Обработка загрузки фото
         document.getElementById('avatarInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(event) {
-                    const base64 = event.target.result;
-                    localStorage.setItem('star_user_avatar', base64);
-                    document.getElementById('avatarPreview').innerHTML = `<img src="${base64}" class="w-full h-full object-cover">`;
+                reader.onload = (event) => {
+                    localStorage.setItem('star_user_avatar', event.target.result);
+                    document.getElementById('avatarPreview').innerHTML = `<img src="${event.target.result}" class="w-full h-full object-cover">`;
                 };
                 reader.readAsDataURL(file);
             }
         });
 
         function saveProfile() {
-            const fio = document.getElementById('editFio').value;
-            const faculty = document.getElementById('editFaculty').value;
-            const course = document.getElementById('editCourse').value;
-
-            localStorage.setItem('star_user_fio', fio);
-            localStorage.setItem('star_user_faculty', faculty);
-            localStorage.setItem('star_user_course', course);
+            localStorage.setItem('star_user_fio', document.getElementById('editFio').value);
+            localStorage.setItem('star_user_faculty', document.getElementById('editFaculty').value);
+            localStorage.setItem('star_user_course', document.getElementById('editCourse').value);
 
             const tags = [];
-            document.querySelectorAll('.tag-checkbox').forEach(cb => {
-                if (cb.checked) tags.push(cb.id);
-            });
+            document.querySelectorAll('.tag-checkbox:checked').forEach(cb => tags.push(cb.id));
             localStorage.setItem('star_user_tags', JSON.stringify(tags));
 
             const toast = document.getElementById('saveToast');
